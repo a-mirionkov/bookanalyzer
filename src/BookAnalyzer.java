@@ -27,20 +27,19 @@ class BookAnalyzer extends Thread {
         String resultPathAndName = resultPath + resultName;
 
 
-        Map<String, Integer> myWords = new HashMap<>(); //пары значений слово - кол-во повторений
+        Map<String, Integer> myWords = new HashMap<>(); //couples - word-amount of reiterations
         ArrayList<String[]> arraysOfWords = new ArrayList<>();
-        ArrayList<String> words = new ArrayList<>(); // слова
-        ArrayList<Integer> countWords = new ArrayList<>(); //количество повторений каждого слова
+        ArrayList<String> words = new ArrayList<>(); // words
+        ArrayList<Integer> countWords = new ArrayList<>(); //amount of reiterations of each word
 
         System.out.println(book);
 
-        int totalWords = 0; //общее колиечество слов во всём тексте
+        int totalWords = 0; //amount of words in the whole file
         try {
 
             BufferedReader myBook = new BufferedReader(new FileReader(book));
-
             while (myBook.ready()) {
-                String s = myBook.readLine();           //считываем весь текст построчно
+                String s = myBook.readLine();           //reading the whole file line by line
                 if (!s.matches("\\s") && !s.isEmpty())
                     arraysOfWords.add(s.split(" "));
             }
@@ -51,19 +50,20 @@ class BookAnalyzer extends Thread {
         System.out.println(arraysOfWords.size() + " lines in the book");
 
 
-        for (int i = 0; i < arraysOfWords.size(); i++) {//перебор массивов
+        for (int i = 0; i < arraysOfWords.size(); i++) {
             String[] currentLine = arraysOfWords.get(i);
-            for (String word : currentLine) {//перебор элементов массива
+            for (String word : currentLine) {
 
-                if (word.matches("[\\p{Punct}]{0,}[a-zA-Z]{1,}[-']{0,1}[a-zA-Z]{0,}[\\p{Punct}]{0,}")) {
+                if (word.matches("[\\p{Punct}]{0,}[\\p{L}]{1,}[-']{0,1}[\\p{L}]{0,}[\\p{Punct}]{0,}")) {
                     word = word.toLowerCase();
                     word = word.replaceAll("[\\p{Punct}&&[^-']]", " ").trim();
 
-                    if (!myWords.containsKey(word))        //каждое слово заносим в карту
+                    if (!myWords.containsKey(word))
                         myWords.put(word, 1);
                     else
-                        myWords.put(word, myWords.get(word) + 1); //если слово уже есть в карте - увеличиваем его value на 1
-                    totalWords++; //увеличиваем счетчик слов с каждым словом, добавленным в карту
+                        myWords.put(word, myWords.get(word) + 1); //if word is already exist in the map myWords
+                                                                                        // increment its value
+                    totalWords++; //increment counter with every added word
 
                 }
             }
@@ -92,12 +92,12 @@ class BookAnalyzer extends Thread {
             }
         }
 
-        double mostUsableWordsCount = totalWords *  ((double)percent/100); //Находим слова, которые являются 60% всего текста.
+        double mostUsableWordsCount = totalWords *  ((double)percent/100); //Finding words which covers 60% of the file
 
-        System.out.println("Следующие слова покрывают " + percent + "% текста:");
+        System.out.println("Following words covers " + percent + "% of the file:");
         try {
             FileOutputStream resultWriter = new FileOutputStream(new File(resultPathAndName));
-            resultWriter.write("#\tкол-во\tслово\r\n\r\n".getBytes());
+            resultWriter.write("#\tamount\tword\r\n\r\n".getBytes());
             int povtory = 0;
             int id = 1;
             for (int a = 0; a < countWords.size(); a++) {
@@ -114,4 +114,3 @@ class BookAnalyzer extends Thread {
         }
     }
 }
-

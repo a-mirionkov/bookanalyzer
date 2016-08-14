@@ -19,16 +19,17 @@ public class MainClass {
             System.out.println();
             System.out.print("Percents (skip for default value - 60): ");
             String percents = reader.readLine();
-
-            if (!percents.isEmpty()) {
+            if (!percents.isEmpty() && percents.matches("[0-9]{1,3}")) //percents validation
+            {
                 bookAnalyzer = new BookAnalyzer(bookName, Integer.parseInt(percents));
-            } else
+            } else {
                 bookAnalyzer = new BookAnalyzer(bookName);
+            }
 
             bookAnalyzer.run();
             bookAnalyzer.join();
-
         }
-
     }
 }
+
+
